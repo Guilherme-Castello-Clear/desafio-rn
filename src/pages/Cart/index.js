@@ -6,10 +6,10 @@ import CardItem from '../../components/CardItem'
 
 export default function Cart(){
 
-  const { cart, addItemCart, removeItemCart } = useContext(CartContext);
+  const { cart, addItemCart, removeItemCart, total } = useContext(CartContext);
   
   return(
-    <View style={stlyes.container}>
+    <View style={styles.container}>
       <FlatList
         data={cart}
         showsVerticalScrollIndicator={false}
@@ -22,16 +22,22 @@ export default function Cart(){
             removeAmount={ () => removeItemCart(item) }
           />
         )}
+        ListFooterComponent={() => <Text style={styles.total}>Total de R$ {total}</Text>}
       />
     </View>
   )
 }
-const stlyes = StyleSheet.create({
+const styles = StyleSheet.create({
   container:{
     flex:1,
     backgroundColor: '#FAFAFA',
     paddingStart: 14, 
     paddingEnd: 14,
     paddingTop: 14,
+  },
+  total:{
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 24
   }
 })

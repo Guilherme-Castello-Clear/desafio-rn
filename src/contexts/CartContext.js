@@ -4,6 +4,7 @@ import index from '../components/Product';
 export const CartContext = createContext({});
 function CartProvider({ children }){
     const [cart, setCart] = useState([])
+    const [total, setTotal] = useState(0)
 
     function addItemCart(newItem){
         const indexItem = cart.findIndex(item => item.id === newItem.id)
@@ -13,8 +14,8 @@ function CartProvider({ children }){
             cartList[indexItem].amount = cartList[indexItem].amount +1;
             cartList[indexItem].total = cartList[indexItem].amount * cartList[indexItem].price
             setCart(cartList)
-        console.log(cartList)
-
+            console.log(cartList)
+            totalResultCart(cartList)
             return;
         }
         let data = {
@@ -24,7 +25,7 @@ function CartProvider({ children }){
         }
 
         setCart(products => [...products, data])
-
+        totalResultCart([...cart], data)
     }
 
     function removeItemCart(product){
@@ -35,11 +36,19 @@ function CartProvider({ children }){
             cartList[indexItem].amount = cartList[indexItem].amount - 1;
             cartList[indexItem].total = cartList[indexItem].total - cartList[indexItem].price;
             setCart(cartList)
+            totalResultCart(cartList)
             return;
         }
 
         const removeItem = cart.filter(item => item.id !== product.id)
         setCart(removeItem);
+        totalResultCart(removeItem)
+    }
+
+    function totalResultCart(items){
+        let myCart = items;
+        let result = myCart.reduce((acc, obj) => {return acc + obj.total}, 0)
+        setTotal(result.toFixed(2))
     }
 
     return(
@@ -47,7 +56,8 @@ function CartProvider({ children }){
             value={{
                 cart,
                 addItemCart,
-                removeItemCart
+                removeItemCart,
+                total
             }}
         >
             {children}
